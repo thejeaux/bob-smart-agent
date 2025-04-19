@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bob's Recommendations</title>
+</head>
+<body>
+    <h1>Top Matching Recommendations</h1>
+    <ul>
+    {% for rec in recs %}
+        <li><strong>{{ rec.name }}</strong> ({{ rec.price }}) - {{ rec.reason }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Diversify Your Collection Suggestions</h2>
+    <ul>
+    {% for rec in divers %}
+        <li><strong>{{ rec.name }}</strong> ({{ rec.price }}) - {{ rec.reason }}</li>
+    {% endfor %}
+    </ul>
+
+    <a href="/">Back to Home</a>
+</body>
+</html>
