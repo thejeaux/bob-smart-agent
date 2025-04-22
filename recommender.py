@@ -1,61 +1,67 @@
-import pandas as pd
+# recommender.py
 
-def recommend_bottles(user_profile, bottle_db, top_n=5, diversify=False):
+import pandas as pd
+import random
+
+def recommend_bottles(user_profile, bottle_db):
     recommendations = []
 
+    # Weight settings
+    w_region = 0.3
+    w_style = 0.3
+    w_price = 0.2
+    w_barrel = 0.2
+
     for idx, bottle in bottle_db.iterrows():
-        score = 0
+        score = 0.0
 
-        if 'region' in bottle and bottle['region'] in user_profile.get('favorite_regions', {}):
-            score += user_profile['favorite_regions'][bottle['region']] * 2
+        # Match Region
+        if str(bottle.get('Region', '')).lower() == str(user_profile.get('favorite_region', '')).lower():
+            score += w_region
 
-        if 'style' in bottle and bottle['style'] in user_profile.get('favorite_styles', {}):
-            score += user_profile['favorite_styles'][bottle['style']] * 3
+        # Match Style
+        if str(bottle.get('Style', '')).lower() == str(user_profile.get('favorite_style', '')).lower():
+            score += w_style
 
-        if 'price' in bottle and user_profile.get('avg_price'):
-            price_diff = abs(bottle['price'] - user_profile['avg_price'])
-            score += max(0, 50 - price_diff)
+        # Price Similarity
+        target_price = user_profile.get('target_price', 0)
+        bottle_price = bottle.get('Price', 0)
+        if target_price and bottle_price:
+            price_diff = abs(target_price - bottle_price)
+            price_score = max(0, 1 - price_diff / target_price)
+            score += price_score * w_price
 
-        if 'age' in bottle and user_profile.get('avg_age') and pd.notna(bottle['age']):
-            age_diff = abs(bottle['age'] - user_profile['avg_age'])
-            score += max(0, 20 - age_diff)
+        # Barrel Type Match (Optional)
+        user_barrel = user_profile.get('favorite_barrel', '').lower()
+        bottle_barrel = str(bottle.get('Barrel Type', '')).lower()
+        if user_barrel and bottle_barrel and user_barrel in bottle_barrel:
+            score += w_barrel
 
-        recommendations.append((bottle['name'], score, bottle))
+        recommendations.append((bottle['Name'], bottle['Price'], score, bottle['Style'], bottle['Region'], bottle['Barrel Type']))
 
-    recommendations = sorted(recommendations, key=lambda x: x[1], reverse=True)
+    # Sort by score
+    recommendations.sort(key=lambda x: x[2], reverse=True)
 
-    if diversify:
-        favorite_regions = user_profile.get('favorite_regions', {})
-        favorite_styles = user_profile.get('favorite_styles', {})
+    # Build smart reasoning explanations
+    top_recommendations = []
+    for rec in recommendations[:5]:
+        name, price, score, style, region, barrel = rec
+        reason = build_reason(user_profile, style, region, price, barrel)
+        top_recommendations.append((name, price, reason))
 
-        top_region = max(favorite_regions, key=favorite_regions.get) if favorite_regions else None
-        top_style = max(favorite_styles, key=favorite_styles.get) if favorite_styles else None
+    return top_recommendations
 
-        diverse_recommendations = []
-        for name, score, bottle in recommendations:
-            if bottle['region'] != top_region and bottle['style'] != top_style:
-                diverse_recommendations.append({
-                    'name': name,
-                    'price': bottle['price'],
-                    'region': bottle['region'],
-                    'age': bottle.get('age', 'N/A'),
-                    'style': bottle['style'],
-                    'reason': f"Suggested to diversify your bar — a {bottle['style']} whisky from {bottle['region']}."
-                })
-            if len(diverse_recommendations) >= top_n:
-                break
-        return diverse_recommendations
+def build_reason(user_profile, style, region, price, barrel):
+    reasons = []
 
-    final_recommendations = []
-    for name, score, bottle in recommendations[:top_n]:
-        explanation = f"Recommended because it matches your preference for {bottle['region']} and {bottle['style']} style, and is close to your price (${bottle['price']})."
-        final_recommendations.append({
-            'name': name,
-            'price': bottle['price'],
-            'region': bottle['region'],
-            'age': bottle.get('age', 'N/A'),
-            'style': bottle['style'],
-            'reason': explanation
-        })
+    if style:
+        reasons.append(f"you enjoy {style.lower()} style")
+    if region:
+        reasons.append(f"you prefer spirits from the {region} category")
+    if barrel:
+        reasons.append(f"you appreciate {barrel.lower()} aging techniques")
+    if price:
+        reasons.append(f"you typically shop around ${int(price)}")
 
-    return final_recommendations
+    return "Because " + ", and ".join(random.sample(reasons, min(2, len(reasons)))) + "."
+
