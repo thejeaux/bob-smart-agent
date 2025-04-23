@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Recommendations</title>
+  <title>Your Recommendations</title>
 </head>
 <body>
-    <h1>Here are your recommended bottles:</h1>
-    <ul>
-        {% for bottle in recommendations %}
-            <li>{{ bottle.brand_id }} - {{ bottle.spirit_type }} - {{ bottle.total_score }}</li>
-        {% endfor %}
-    </ul>
-    <a href="/">Go Back</a>
+  <h1>Recommended Bottles:</h1>
+  <ul>
+    {% for bottle in recommendations %}
+      <li>
+        {{ bottle.brand_id }} — {{ bottle.spirit_type }} — {{ bottle.avg_msrp }}
+      </li>
+    {% endfor %}
+  </ul>
 </body>
 </html>

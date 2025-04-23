@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Whiskey Recommender</title>
+  <title>Welcome to Bob</title>
 </head>
 <body>
-    <h1>Welcome to Bob's Whiskey Recommender</h1>
-    <form action="/results" method="POST">
-        <label for="username">Enter your name:</label>
-        <input type="text" id="username" name="username" required>
-        <button type="submit">Get Recommendations</button>
-    </form>
+  <h1>Whiskey Recommendation Form</h1>
+  <form method="POST" action="/results">
+    <input type="text" name="username" placeholder="Enter your name" required>
+    <button type="submit">Submit</button>
+  </form>
 </body>
 </html>
