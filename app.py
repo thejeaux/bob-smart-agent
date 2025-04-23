@@ -1,13 +1,12 @@
+import os
 from flask import Flask, render_template, request
 import pandas as pd
-import os
-from recommender import recommend_bottles
-from api_fetcher import fetch_user_data
 
 app = Flask(__name__)
 
-# Load the dataset once
-bottle_db = pd.read_csv('bottle_data.csv')
+# Load CSV using absolute path to avoid issues in Railway
+csv_path = os.path.join(os.path.dirname(__file__), "bottle_data.csv")
+bottle_data = pd.read_csv(csv_path)
 
 @app.route('/')
 def home():
@@ -16,12 +15,12 @@ def home():
 @app.route('/results', methods=['POST'])
 def results():
     username = request.form['username']
-    try:
-        user_bottles = fetch_user_data(username)
-        recommendations = recommend_bottles(user_bottles, bottle_db)
-        return render_template('results.html', recommendations=recommendations)
-    except Exception as e:
-        return render_template('results.html', error=str(e))
+
+    # Dummy recommendation logic just for testing
+    user_bottles = bottle_data.sample(3).to_dict(orient='records')
+
+    return render_template('results.html', recommendations=user_bottles)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
