@@ -4,21 +4,19 @@ import pandas as pd
 
 app = Flask(__name__)
 
-# Load CSV using absolute path to avoid issues in Railway
+# Load CSV using absolute path
 csv_path = os.path.join(os.path.dirname(__file__), "bottle_data.csv")
 bottle_data = pd.read_csv(csv_path)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html')  # ← Make sure index.html is in the /templates folder
 
 @app.route('/results', methods=['POST'])
 def results():
     username = request.form['username']
-
-    # Dummy recommendation logic just for testing
+    # Dummy recommendation logic
     user_bottles = bottle_data.sample(3).to_dict(orient='records')
-
     return render_template('results.html', recommendations=user_bottles)
 
 if __name__ == '__main__':

@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Bob AI - Find Your Next Bottle</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Whisky Recommender</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Bob - Your Whisky Expert</h1>
-        <p>Enter your BAXUS Username to get personalized bottle recommendations:</p>
-        <form method="POST" action="/results">
-            <input type="text" name="username" placeholder="Enter Username" required>
-            <button type="submit">Get Recommendations</button>
-        </form>
-    </div>
+    <h1>Welcome to Bob's Whisky Recommender</h1>
+    <form method="POST" action="/results">
+        <label>Enter your name:</label>
+        <input type="text" name="username" required>
+        <button type="submit">Get Recommendations</button>
+    </form>
 </body>
 </html>
