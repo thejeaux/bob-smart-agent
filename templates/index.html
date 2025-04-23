@@ -1,13 +1,16 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Welcome to Bob</title>
+    <meta charset="UTF-8">
+    <title>Whisky Recommender</title>
 </head>
 <body>
-  <h1>Whiskey Recommendation Form</h1>
-  <form method="POST" action="/results">
-    <input type="text" name="username" placeholder="Enter your name" required>
-    <button type="submit">Submit</button>
-  </form>
+    <h1>Welcome to Bob's Whisky Recommender</h1>
+    <form method="POST" action="/results">
+        <label for="username">Enter your name:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Get Recommendations</button>
+    </form>
 </body>
 </html>

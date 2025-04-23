@@ -1,16 +1,18 @@
+<!-- templates/results.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Your Recommendations</title>
+    <meta charset="UTF-8">
+    <title>Your Recommendations</title>
 </head>
 <body>
-  <h1>Recommended Bottles:</h1>
-  <ul>
-    {% for bottle in recommendations %}
-      <li>
-        {{ bottle.brand_id }} — {{ bottle.spirit_type }} — {{ bottle.avg_msrp }}
-      </li>
-    {% endfor %}
-  </ul>
+    <h1>Your Whisky Recommendations</h1>
+    <ul>
+        {% for bottle in recommendations %}
+            <li>{{ bottle['brand_id'] }} - {{ bottle['spirit_type'] }} - Proof: {{ bottle['proof'] }}</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Go back</a>
 </body>
 </html>
+
