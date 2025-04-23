@@ -4,18 +4,17 @@ import pandas as pd
 
 app = Flask(__name__)
 
-# Load CSV using absolute path
+# Load the CSV file using the correct relative path
 csv_path = os.path.join(os.path.dirname(__file__), "bottle_data.csv")
 bottle_data = pd.read_csv(csv_path)
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # ← Make sure index.html is in the /templates folder
+    return render_template('index.html')
 
 @app.route('/results', methods=['POST'])
 def results():
     username = request.form['username']
-    # Dummy recommendation logic
     user_bottles = bottle_data.sample(3).to_dict(orient='records')
     return render_template('results.html', recommendations=user_bottles)
 

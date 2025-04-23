@@ -4,16 +4,16 @@
     <title>Your Recommendations</title>
 </head>
 <body>
-    <h1>Top Bottle Picks</h1>
+    <h1>Your Whiskey Recommendations</h1>
     <ul>
         {% for bottle in recommendations %}
-            <li>
-                <strong>{{ bottle['brand_id'] }}</strong><br>
-                Type: {{ bottle['spirit_type'] }}<br>
-                MSRP: ${{ bottle['msrp'] }}<br>
-                Score: {{ bottle['total_score'] }}
-            </li>
-            <br>
+        <li>
+            <strong>{{ bottle.brand_id }}</strong><br>
+            Type: {{ bottle.spirit_type }}<br>
+            Proof: {{ bottle.proof }}<br>
+            Price: ${{ bottle.fair_price }}<br>
+            <img src="{{ bottle.image_url }}" alt="Bottle Image" width="150">
+        </li>
         {% endfor %}
     </ul>
     <a href="/">Back</a>
